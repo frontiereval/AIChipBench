@@ -15,283 +15,253 @@
 <meta property="og:title" content="AIChipBench: Benchmarking LLM Agents for Automated AI Accelerator Design">
 <meta property="og:description" content="AIChipBench asks LLM coding agents to implement quantized language-model decoders in synthesizable RTL that must match an integer reference in outputs and stored state at every decoding step. Four coding agents, 9,136 attempts, two tracks.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306070b'/%3E%3Ctext x='50' y='62' font-family='Georgia,serif' font-size='40' fill='%23d8bb72' text-anchor='middle'%3EAC%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230A0A0A'/%3E%3Ctext x='50' y='63' font-family='Arial,sans-serif' font-size='38' font-weight='600' fill='white' text-anchor='middle'%3EAC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-:root {
-  color-scheme: light;
-  --page: #f9f9f7; --surface-1: #fcfcfb; --surface-2: #f0efec;
-  --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #898781;
-  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11, 11, 11, 0.10);
-  --s1: #2a78d6; --s1-soft: #cde2fb; --code-bg: #f0efec; --gold: #d8bb72;
-  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+:root{
+  --bg:#ffffff; --subtle:#f6f6f4; --ink:#0a0a0a; --ink-2:#3d3d3d; --ink-3:#757575; --line:#e5e5e1; --band:#d8d8d3;
+  --d-bg:#0a0a0a; --d-ink:#ffffff; --d-ink-2:rgba(255,255,255,.68); --d-ink-3:rgba(255,255,255,.44); --d-line:rgba(255,255,255,.16);
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --maxw:1200px; --nav-h:64px; --ease:cubic-bezier(.22,.61,.36,1);
 }
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #232322;
-    --text-primary: #f0efec; --text-secondary: #c3c2b7; --muted: #898781;
-    --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
-    --s1: #3987e5; --s1-soft: #184f95; --code-bg: #232322;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #232322;
-  --text-primary: #f0efec; --text-secondary: #c3c2b7; --muted: #898781;
-  --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
-  --s1: #3987e5; --s1-soft: #184f95; --code-bg: #232322;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--page); color: var(--text-primary); font: 16px/1.6 var(--font); }
-a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--axis); }
-a:hover { text-decoration-color: currentColor; }
-code, pre { font-family: var(--mono); font-size: 0.88em; }
-img { max-width: 100%; height: auto; display: block; }
-:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; border-radius: 4px; }
-section[id] { scroll-margin-top: 72px; }
-.skip { position: fixed; top: -100px; left: 16px; z-index: 50; background: var(--surface-1); color: var(--text-primary); padding: 10px 14px; border-radius: 8px; }
-.skip:focus { top: 12px; }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+::selection{background:var(--ink);color:var(--bg)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid currentColor;outline-offset:4px;border-radius:2px}
+.container{width:100%;max-width:var(--maxw);margin:0 auto;padding-inline:clamp(1.25rem,4vw,2.5rem)}
+section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
+.skip{position:fixed;top:-100px;left:16px;z-index:500;background:#fff;color:#000;padding:10px 14px}
+.skip:focus{top:12px}
+.mono{font-family:var(--mono)}
+.ov{text-decoration:overline;text-decoration-thickness:1px}
 
-/* top bar */
-header.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--page) 88%, transparent);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
-header.top .wrap { display: flex; align-items: center; gap: 20px; height: 56px; }
-header.top .brand { font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; text-decoration: none; }
-header.top nav { display: flex; gap: 18px; overflow-x: auto; flex: 1; font-size: 14px; color: var(--text-secondary); }
-header.top nav a { text-decoration: none; white-space: nowrap; }
-header.top nav a:hover { color: var(--text-primary); }
-button.theme { border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
-  border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
-button.theme:hover { color: var(--text-primary); }
+/* nav: clear over the hero, white once the hero has scrolled away */
+.nav{position:fixed;inset:0 0 auto 0;z-index:100;height:var(--nav-h);display:flex;align-items:center;color:var(--d-ink);
+  border-bottom:1px solid transparent;transition:background .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease)}
+.nav .container{display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.nav .brand{font-weight:600;font-size:1rem;letter-spacing:-.01em;white-space:nowrap}
+.nav .links{display:flex;gap:1.6rem;overflow-x:auto;font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--d-ink-2)}
+.nav .links a{white-space:nowrap;transition:color .2s var(--ease)}
+.nav .links a:hover{color:var(--d-ink)}
+.nav.scrolled{background:rgba(10,10,10,.78);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+.nav.solid{background:rgba(255,255,255,.86);
+  border-bottom-color:var(--line);color:var(--ink)}
+.nav.solid .links{color:var(--ink-3)} .nav.solid .links a:hover{color:var(--ink)}
 
-/* hero and finale: always dark */
-.grand, .finale { background: #06070b; color: #f0efec; position: relative; overflow: hidden; }
-.grand { padding: 84px 0 60px;
-  background: radial-gradient(1200px 520px at 18% 62%, rgba(57, 135, 229, 0.16), transparent 70%),
-              radial-gradient(900px 420px at 86% 20%, rgba(216, 187, 114, 0.10), transparent 70%), #06070b; }
-.grand .eyebrow, .finale .eyebrow { font-size: 12.5px; line-height: 1.6; letter-spacing: 0.34em; text-transform: uppercase; color: var(--gold); margin: 0 0 22px; max-width: none; }
-.grand h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(52px, 10vw, 124px); line-height: 0.96; letter-spacing: -0.025em; margin: 0 0 26px; }
-.grand .lede { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; color: #c3c2b7; max-width: 760px; margin: 0 0 26px; }
-.grand .lede b { color: #f0efec; font-weight: 600; }
-.grand .people { font-size: 16px; color: #f0efec; margin: 0 0 6px; max-width: 900px; line-height: 1.7; }
-.grand .people sup, .grand .places sup { font-size: 0.68em; color: #898781; margin-left: 1px; }
-.grand .places { font-size: 13.5px; color: #898781; margin: 0 0 28px; max-width: 900px; }
-.grand a, .finale a { color: #f0efec; }
-.links { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 6px; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 600;
-  text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.22); color: #f0efec; background: rgba(255, 255, 255, 0.04); }
-.btn:hover { background: rgba(255, 255, 255, 0.10); }
-.btn.primary { background: #f0efec; color: #06070b !important; border-color: #f0efec; }
-.btn.primary:hover { background: #ffffff; }
-.btn.off { color: #898781; border-style: dashed; cursor: default; }
-.btn.off:hover { background: rgba(255, 255, 255, 0.04); }
-.statement { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 16px 20px; max-width: 760px; overflow-x: auto; margin: 30px 0 0; }
-.statement .label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #898781; margin-bottom: 6px; }
-.statement pre { margin: 0; font-size: 15px; line-height: 1.7; color: #f0efec; white-space: pre-wrap; }
-.ages { list-style: none; margin: 44px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255, 255, 255, 0.14); }
-.ages li { padding: 18px 20px 0 0; }
-.ages .yr { display: block; font-family: var(--serif); font-size: clamp(30px, 3.6vw, 46px); line-height: 1; color: var(--gold); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
-.ages .what { display: block; font-size: 14.5px; line-height: 1.5; color: #c3c2b7; }
-.finale { padding: 96px 0; margin-top: 72px;
-  background: radial-gradient(1000px 460px at 50% 110%, rgba(216, 187, 114, 0.13), transparent 70%), #06070b; }
-.finale h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 5.6vw, 72px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 22px; max-width: 900px; }
-.finale p { font-size: 18px; line-height: 1.6; color: #c3c2b7; max-width: 720px; margin: 0 0 26px; }
+/* hero */
+.hero{position:relative;background:var(--d-bg);color:var(--d-ink);overflow:hidden;padding:calc(var(--nav-h) + clamp(3.5rem,9vh,7rem)) 0 0}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(to right,rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:72px 72px;-webkit-mask-image:linear-gradient(to bottom,#000 0%,transparent 78%);mask-image:linear-gradient(to bottom,#000 0%,transparent 78%)}
+.hero .container{position:relative}
+.kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--d-ink-2);margin:0 0 1.8rem}
+.kicker i{font-style:normal;color:var(--d-ink-3);margin:0 .55em}
+.hero h1{font-weight:500;font-size:clamp(3rem,9.2vw,7.6rem);line-height:.95;letter-spacing:-.045em;margin:0 0 1.8rem}
+.hero .statement{font-size:clamp(1.2rem,2.1vw,1.65rem);line-height:1.35;letter-spacing:-.012em;color:var(--d-ink);max-width:21em;margin:0 0 2.2rem;font-weight:400}
+.hero .statement span{color:var(--d-ink-2)}
+.people{font-size:.98rem;color:var(--d-ink);margin:0 0 .45rem;line-height:1.7;max-width:60rem}
+.people sup,.places sup{font-size:.66em;color:var(--d-ink-3);margin-left:1px}
+.places{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--d-ink-3);margin:0 0 2.2rem;line-height:1.9;max-width:60rem}
+.cta{display:flex;flex-wrap:wrap;gap:.6rem}
+.pill{display:inline-flex;align-items:center;gap:.45rem;padding:.72rem 1.15rem;border-radius:999px;font-size:.9rem;font-weight:500;letter-spacing:-.005em;
+  border:1px solid var(--d-line);color:var(--d-ink);transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+.pill:hover{border-color:var(--d-ink)}
+.pill.solid{background:var(--d-ink);color:var(--d-bg);border-color:var(--d-ink)}
+.pill.solid:hover{background:transparent;color:var(--d-ink)}
+.pill.off{color:var(--d-ink-3);border-style:dashed;cursor:default} .pill.off:hover{border-color:var(--d-line)}
+.stats{list-style:none;margin:clamp(3.5rem,8vh,6rem) 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--d-line)}
+.stats li{padding:1.5rem 1.5rem 2.4rem 0;border-right:1px solid var(--d-line)}
+.stats li+li{padding-left:1.5rem} .stats li:last-child{border-right:0}
+.stats b{display:block;font-weight:500;font-size:clamp(2.1rem,4.2vw,3.4rem);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{display:block;margin-top:.8rem;font-size:.9rem;line-height:1.45;color:var(--d-ink-2);max-width:17em}
 
-/* numbered sections */
-main.wrap { counter-reset: sec; }
-section.block { padding: 64px 0 8px; }
-section.block > h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 3.6vw, 42px); line-height: 1.08; letter-spacing: -0.015em; margin: 0 0 10px; counter-increment: sec; }
-section.block > h2::before { content: counter(sec, upper-roman); display: block; font-family: var(--font); font-size: 12.5px; letter-spacing: 0.3em; color: var(--muted); margin-bottom: 10px; }
-section.block > p.sub { color: var(--text-secondary); font-size: 17px; margin: 0 0 22px; max-width: 820px; }
-.prose { max-width: 820px; font-size: 17px; color: var(--text-secondary); }
-.prose p { margin: 0 0 16px; }
-.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
-.card + .card { margin-top: 16px; }
-.card h3 { font-size: 17px; margin: 0 0 6px; font-weight: 600; }
-.card p { margin: 0 0 12px; color: var(--text-secondary); }
-.card p:last-child { margin-bottom: 0; }
-.note { font-size: 14px; color: var(--text-secondary); }
-.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
-.trio .card + .card { margin-top: 0; }
-.tag { display: block; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-figure { margin: 0; }
-figure img { width: 100%; background: #ffffff; border-radius: 10px; padding: 12px; border: 1px solid var(--border); }
-figcaption { color: var(--text-secondary); font-size: 14px; margin-top: 12px; max-width: 820px; }
+/* sections: label on the left, content on the right */
+.section{border-bottom:1px solid var(--line);padding:clamp(3.5rem,8vh,6rem) 0}
+.split{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:clamp(1.5rem,4vw,4rem)}
+.side{position:sticky;top:calc(var(--nav-h) + 24px);align-self:start}
+.idx{display:block;font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;color:var(--ink-3);margin-bottom:.7rem}
+.side h2{font-weight:500;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.1;letter-spacing:-.03em;margin:0}
+.body{min-width:0}
+.body .lead{font-size:clamp(1.3rem,2.2vw,1.75rem);line-height:1.32;letter-spacing:-.02em;color:var(--ink);margin:0 0 1.8rem;max-width:26em}
+.body p{font-size:1.06rem;color:var(--ink-2);margin:0 0 1.15rem;max-width:44em}
+.intro{font-size:1.15rem !important;line-height:1.5;color:var(--ink) !important;margin-bottom:2.2rem !important;max-width:38em !important}
 
-/* key figures */
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 18px 0; }
-.kpi { background: var(--surface-2); border-radius: 12px; padding: 16px 18px; }
-.kpi .k-value { font-size: clamp(28px, 3vw, 36px); font-weight: 620; letter-spacing: -0.02em; line-height: 1.05; font-variant-numeric: tabular-nums; }
-.kpi .k-label { font-size: 13.5px; color: var(--text-secondary); margin-top: 6px; }
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink)}
+.cols>div{padding:1.4rem 1.6rem 1.8rem 0;border-right:1px solid var(--line)}
+.cols>div+div{padding-left:1.6rem} .cols>div:last-child{border-right:0}
+.tag{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1.1rem}
+.cols h3{font-weight:500;font-size:1.3rem;letter-spacing:-.025em;line-height:1.2;margin:0 0 .7rem}
+.cols p{font-size:.98rem;margin:0;color:var(--ink-2)}
+figure{margin:2.6rem 0 0}
+figure .frame{display:block;border:1px solid var(--line);border-radius:14px;padding:clamp(.75rem,2vw,1.5rem);background:#fff}
+figcaption{font-size:.88rem;color:var(--ink-3);margin-top:.9rem;max-width:46em;line-height:1.55}
 
-/* leaderboard chart: one hue, values labeled on every bar */
-.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-.panel h3 { font-size: 14px; font-weight: 600; margin: 0 0 2px; }
-.panel .unit { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; }
-.rows { list-style: none; margin: 0; padding: 0; }
-.rows li { display: grid; grid-template-columns: 70px minmax(0, 1fr) 42px; align-items: center; gap: 10px; padding: 7px 0; font-size: 14px; }
-.rows .who { color: var(--text-secondary); white-space: nowrap; }
-.rows .val { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
-.track { position: relative; height: 18px; border-left: 1px solid var(--axis); background: linear-gradient(var(--surface-2), var(--surface-2)) no-repeat 0 50% / 100% 2px; }
-.track .bar { position: absolute; left: 0; top: 2px; bottom: 2px; background: var(--s1); border-radius: 0 4px 4px 0; }
-.track .ci { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--text-primary); opacity: 0.75; }
-.track .ci::before, .track .ci::after { content: ""; position: absolute; top: -4px; width: 2px; height: 10px; background: var(--text-primary); }
-.track .ci::before { left: 0; } .track .ci::after { right: 0; }
-.rows li:hover .bar, .rows li:focus-within .bar { filter: brightness(1.12); }
-.rows .range { grid-column: 2 / 4; font-size: 12.5px; color: var(--muted); margin-top: -4px; font-variant-numeric: tabular-nums; }
-.axisnote { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin: 4px 52px 0 80px; font-variant-numeric: tabular-nums; }
-details.table-view { margin-top: 18px; }
-details.table-view summary { cursor: pointer; color: var(--text-secondary); font-size: 14px; }
-.tv { overflow-x: auto; margin-top: 10px; border: 1px solid var(--grid); border-radius: 8px; }
-.tv table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
-.tv th, .tv td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
-.tv tr:last-child td { border-bottom: 0; }
-.tv th { background: var(--surface-2); color: var(--text-secondary); font-weight: 600; }
-.tv th:first-child, .tv td:first-child { text-align: left; }
+/* leaderboard: black bars, values on every bar, the 95% interval as a grey band */
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.5rem,3vw,3rem);border-top:1px solid var(--ink);padding-top:1.4rem}
+.panel h3{font-weight:500;font-size:1.05rem;letter-spacing:-.015em;margin:0 0 .3rem}
+.panel .unit{font-family:var(--mono);font-size:.7rem;letter-spacing:.02em;color:var(--ink-3);margin:0 0 1.3rem;line-height:1.6;max-width:none;min-height:3.2em}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:grid;grid-template-columns:4.6rem minmax(0,1fr) 2.9rem;align-items:center;align-content:center;column-gap:.8rem;min-height:4.3rem;padding:.5rem 0;border-top:1px solid var(--line);font-size:.92rem}
+.rows .who{color:var(--ink);white-space:nowrap}
+.rows .val{text-align:right;font-family:var(--mono);font-size:.9rem;font-weight:500;font-variant-numeric:tabular-nums}
+.track{position:relative;height:18px}
+.track .ci{position:absolute;top:0;bottom:0;background:var(--band);border-radius:2px}
+.track .bar{position:absolute;left:0;top:5px;bottom:5px;background:var(--ink);border-radius:0 2px 2px 0;transition:transform .2s var(--ease)}
+.track::before{content:"";position:absolute;left:0;top:-3px;bottom:-3px;width:1px;background:var(--ink-3)}
+.rows li:hover .who,.rows li:hover .val{text-decoration:underline;text-underline-offset:3px}
+.rows .range{grid-column:2 / 4;font-family:var(--mono);font-size:.68rem;color:var(--ink-3);margin-top:.3rem;font-variant-numeric:tabular-nums}
+.body .scale{max-width:none;display:flex;justify-content:space-between;font-family:var(--mono);font-size:.66rem;color:var(--ink-3);margin:.55rem 3.7rem 0 5.4rem;font-variant-numeric:tabular-nums}
+.body .key{font-family:var(--mono);font-size:.7rem;color:var(--ink-3);margin:1.6rem 0 0;display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;max-width:none}
+.key i{display:inline-block;vertical-align:middle;margin-right:.5em}
+.key .k-bar{width:22px;height:8px;background:var(--ink)} .key .k-ci{width:22px;height:12px;background:var(--band);border-radius:2px}
+details.tv{margin-top:1.6rem}
+details.tv summary{cursor:pointer;font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+details.tv summary:hover{color:var(--ink)}
+.tv .scroll{overflow-x:auto;margin-top:1rem}
+.tv table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+.tv th,.tv td{padding:.7rem .9rem .7rem 0;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.tv th{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:400;border-bottom-color:var(--ink)}
+.tv th:first-child,.tv td:first-child{text-align:left}
+.tv td:not(:first-child){font-family:var(--mono);font-size:.86rem}
 
 /* findings */
-ol.findings { list-style: none; margin: 0; padding: 0; counter-reset: f; }
-ol.findings li { counter-increment: f; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; padding: 20px 0; border-top: 1px solid var(--grid); }
-ol.findings li:first-child { border-top: 0; padding-top: 4px; }
-ol.findings li::before { content: counter(f); font-family: var(--serif); font-size: 40px; line-height: 1; color: var(--gold); }
-ol.findings strong { display: block; font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-ol.findings span { color: var(--text-secondary); }
+.findings{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.findings li{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:.5rem;padding:1.5rem 0 1.6rem;border-bottom:1px solid var(--line)}
+.findings li:last-child{border-bottom:0;padding-bottom:0}
+.findings .n{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;color:var(--ink-3);padding-top:.5rem}
+.findings strong{display:block;font-weight:500;font-size:clamp(1.15rem,1.7vw,1.4rem);line-height:1.25;letter-spacing:-.02em;margin-bottom:.5rem;max-width:30em}
+.findings span.d{display:block;font-size:1rem;color:var(--ink-2);max-width:44em}
 
-pre.bib { background: var(--code-bg); border-radius: 10px; padding: 16px 18px; margin: 0 0 14px; overflow-x: auto; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
-button.copy { border: 1px solid var(--border); background: var(--surface-2); color: var(--text-primary); border-radius: 8px; padding: 7px 12px; font: inherit; font-size: 13.5px; cursor: pointer; }
-button.copy:hover { background: var(--surface-1); }
-#copy-status { display: inline-block; margin-left: 10px; font-size: 13.5px; color: var(--text-secondary); }
-.card .actions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
-.card .actions a { display: inline-flex; padding: 8px 15px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); background: var(--surface-2); }
-.card .actions a.primary { background: var(--text-primary); color: var(--page); border-color: var(--text-primary); }
-.card .actions a:hover { filter: brightness(0.96); }
-.card h3.big { font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.015em; margin: 0 0 4px; }
-.card .kicker { color: var(--text-secondary); margin: 0 0 14px; }
+pre.bib{background:var(--d-bg);color:#e9e9e5;border-radius:12px;padding:1.3rem 1.5rem;margin:0 0 1.1rem;overflow-x:auto;font-family:var(--mono);font-size:.82rem;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.62rem 1.05rem;border-radius:999px;border:1px solid var(--ink);background:transparent;color:var(--ink);
+  font:inherit;font-size:.88rem;font-weight:500;cursor:pointer;transition:background .2s var(--ease),color .2s var(--ease)}
+.btn:hover,.btn.solid{background:var(--ink);color:var(--bg)} .btn.solid:hover{background:transparent;color:var(--ink)}
+#copy-status{display:inline-block;margin-left:.9rem;font-size:.88rem;color:var(--ink-3)}
 
-footer { padding: 40px 0 64px; color: var(--text-secondary); font-size: 14px; }
-footer p { margin: 0 0 8px; }
+/* index of benchmarks on the home page */
+.index{border-top:1px solid var(--ink)}
+.entry{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr) auto;gap:clamp(1rem,3vw,3rem);align-items:start;padding:1.8rem 0;border-bottom:1px solid var(--line);transition:background .2s var(--ease)}
+.entry h3{font-weight:500;font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.035em;line-height:1.05;margin:0 0 .7rem}
+.entry .meta{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);line-height:1.8}
+.entry p{margin:0;font-size:1.02rem;color:var(--ink-2)}
+.entry .go{font-size:1.5rem;line-height:1;transition:transform .2s var(--ease)}
+a.entry:hover .go{transform:translate(3px,-3px)} a.entry:hover h3{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}
 
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
-.reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { opacity: 1; transform: none; transition: none; } }
-@media (max-width: 860px) {
-  .trio { grid-template-columns: 1fr; }
-  .board { grid-template-columns: 1fr; gap: 26px; }
-  .ages { grid-template-columns: 1fr 1fr; }
+footer{background:var(--d-bg);color:var(--d-ink-2);padding:clamp(2.5rem,6vh,4rem) 0}
+footer .container{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem 2rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+footer a{color:var(--d-ink-2);transition:color .2s var(--ease)} footer a:hover{color:var(--d-ink)}
+footer .l{display:flex;flex-wrap:wrap;gap:.6rem 1.6rem}
+footer .c{color:var(--d-ink-3)}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}*{transition:none !important}}
+@media (max-width:900px){
+  .split{grid-template-columns:1fr;gap:1.6rem} .side{position:static}
+  .cols{grid-template-columns:1fr} .cols>div{border-right:0;border-bottom:1px solid var(--line);padding:1.4rem 0 1.6rem} .cols>div+div{padding-left:0} .cols>div:last-child{border-bottom:0}
+  .board{grid-template-columns:1fr} .panel .unit{min-height:0}
+  .stats{grid-template-columns:1fr 1fr} .stats li:nth-child(2){border-right:0} .stats li:nth-child(n+3){border-top:1px solid var(--d-line)} .stats li:nth-child(3){padding-left:0}
+  .entry{grid-template-columns:1fr auto} .entry p{grid-column:1 / -1;grid-row:2}
 }
-@media (max-width: 720px) {
-  .wrap { padding: 0 16px; }
-  .grand { padding-top: 56px; }
-  ol.findings li { grid-template-columns: 44px minmax(0, 1fr); }
-  ol.findings li::before { font-size: 32px; }
-}
+@media (max-width:560px){ .nav .links a.opt{display:none} .findings li{grid-template-columns:2.6rem minmax(0,1fr)} }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="top"><div class="wrap">
+<nav class="nav" aria-label="Main"><div class="container">
   <a class="brand" href="#top">AIChipBench</a>
-  <nav aria-label="Sections"><a href="#abstract">Abstract</a><a href="#tracks">Tracks</a><a href="#leaderboard">Leaderboard</a><a href="#findings">Findings</a><a href="#citation">Citation</a><a href="https://frontiereval.github.io/">FrontierEval</a></nav>
-  <button class="theme" id="theme" type="button" aria-label="Color theme">Theme: auto</button>
+  <div class="links"><a class="opt" href="#abstract">Abstract</a><a class="opt" href="#tracks">Tracks</a><a href="#leaderboard">Leaderboard</a><a class="opt" href="#findings">Findings</a><a class="opt" href="#citation">Cite</a><a href="https://frontiereval.github.io/">FrontierEval</a></div>
+</div></nav>
+
+<header class="hero" id="top"><div class="container">
+  <p class="kicker">FrontierEval<i>/</i>Benchmark</p>
+  <h1>AIChipBench</h1>
+  <p class="statement">Can LLM coding agents build the hardware that runs a language model? <span>The design must match an integer reference, in outputs and in stored state, at every decoding step.</span></p>
+  <p class="people">Guangyuan Wang<sup>1,2</sup>, Chengran Li, Minchen Luo<sup>3</sup>, Jichen Feng<sup>4,5</sup>, Mengdi Wang<sup>4&dagger;</sup>, Yifan Zhang<sup>4&dagger;</sup></p>
+  <p class="places"><sup>1</sup>Mila &nbsp; <sup>2</sup>McGill University &nbsp; <sup>3</sup>Erised Labs &nbsp; <sup>4</sup>Princeton University &nbsp; <sup>5</sup>University of Pennsylvania</p>
+  <div class="cta"><a class="pill solid" href="https://github.com/frontiereval/AIChipBench">GitHub &nearr;</a><a class="pill" href="#leaderboard">Leaderboard &darr;</a><a class="pill" href="#citation">Cite</a><span class="pill off" aria-disabled="true">Paper &middot; coming soon</span></div>
+  <ul class="stats">
+    <li><b>9,136</b><span>attempts, each a fresh process and workspace under fixed caps</span></li>
+    <li><b>4</b><span>coding agents on the same task instances</span></li>
+    <li><b>12</b><span>correctness tasks on seven Qwen3.5, Gemma, and Llama 3.2 decoders</span></li>
+    <li><b>4</b><span>PPA targets, where a correct design must get faster at nearly fixed area</span></li>
+  </ul>
 </div></header>
 
-<section class="grand" id="top" aria-labelledby="grand-h"><div class="wrap">
-  <p class="eyebrow">Benchmarking LLM agents for automated AI accelerator design</p>
-  <h1 id="grand-h">AIChipBench</h1>
-  <p class="lede">LLM coding agents build the hardware for a language-model decoder. It must match an integer reference, in outputs and in <b>stored state</b>, at every decoding step.</p>
-  <p class="people">Guangyuan Wang<sup>1,2</sup> &nbsp;&middot;&nbsp; Chengran Li &nbsp;&middot;&nbsp; Minchen Luo<sup>3</sup> &nbsp;&middot;&nbsp; Jichen Feng<sup>4,5</sup> &nbsp;&middot;&nbsp; Mengdi Wang<sup>4&dagger;</sup> &nbsp;&middot;&nbsp; Yifan Zhang<sup>4&dagger;</sup></p>
-  <p class="places"><sup>1</sup>Mila &nbsp;&middot;&nbsp; <sup>2</sup>McGill University &nbsp;&middot;&nbsp; <sup>3</sup>Erised Labs &nbsp;&middot;&nbsp; <sup>4</sup>Princeton University &nbsp;&middot;&nbsp; <sup>5</sup>University of Pennsylvania</p>
-  <div class="links"><span class="btn off" aria-disabled="true">Paper &middot; coming soon</span><a class="btn primary" href="https://github.com/frontiereval/AIChipBench">GitHub &nearr;</a><a class="btn" href="#leaderboard">Leaderboard &darr;</a><a class="btn" href="#citation">Cite</a></div>
-  <div class="statement"><div class="label">Overall score</div><pre><code>Score = 100 &middot; c&#772; &middot; q&#772;    (correctness track &times; PPA track)</code></pre></div>
-  <ol class="ages">
-    <li class="reveal"><span class="yr">9,136</span><span class="what">attempts by coding agents, each a fresh process and workspace under fixed caps</span></li>
-    <li class="reveal"><span class="yr">4</span><span class="what">coding agents on the same task instances: Sol 5.6, Astra 6, Opus 5.5, Fable 5.1</span></li>
-    <li class="reveal"><span class="yr">12</span><span class="what">correctness tasks on seven Qwen3.5, Gemma, and Llama 3.2 decoders</span></li>
-    <li class="reveal"><span class="yr">4</span><span class="what">PPA targets, where a correct design must get faster at nearly fixed area</span></li>
-  </ol>
+<main id="main">
+<section class="section" id="abstract"><div class="container split">
+  <div class="side"><span class="idx">01</span><h2>Abstract</h2></div>
+  <div class="body">
+    <p class="lead">A language-model decoder carries state between decoding steps, and in hardware a wrong state update can leave the current token correct and corrupt the output several tokens later, so a design can pass output tests and still be wrong.</p>
+    <p>AIChipBench asks what LLM coding agents need to build such hardware correctly. Agents implement quantized Qwen3.5, Gemma 3, Gemma 4, and Llama 3.2 decoders in synthesizable register-transfer-level (RTL) code against an executable integer reference that specifies the outputs and the stored state at every decoding step. They debug against public tests under fixed budgets; their frozen designs are graded on held-out token sequences, resets, memory stalls, and synthesis, and a second track asks them to speed up a correct design at nearly fixed area.</p>
+    <p>Across 9,136 attempts by four coding agents, the difficulty lies in stored state. Feedback that points to the first state mismatch raises acceptance over output-only feedback in all 12 agent&ndash;task cells of a matched study, by 25.0 to 46.9 percentage points, and halves the agent-hours per accepted design. Regraded on new sequences and conditions, 45 of 69 accepted designs fail within the 32 steps their tests required. More than a third of attempts to speed up a correct design end without one. An overall score ranks Sol 5.6 and Fable 5.1 above Astra 6 and Opus 5.5, and both halves of the instances give this order in all 200 random splits. Hardware agents therefore need debugging feedback that exposes stored state, and their benchmarks need final tests well beyond the development cases.</p>
+  </div>
 </div></section>
 
-<main class="wrap" id="main">
-<section class="block" id="abstract"><h2>Abstract</h2>
-<div class="prose">
-<p>A language-model decoder carries state between decoding steps, and in hardware a wrong state update can leave the current token correct and corrupt the output several tokens later, so a design can pass output tests and still be wrong. AIChipBench asks what LLM coding agents need to build such hardware correctly.</p>
-<p>Agents implement quantized Qwen3.5, Gemma 3, Gemma 4, and Llama 3.2 decoders in synthesizable register-transfer-level (RTL) code against an executable integer reference that specifies the outputs and the stored state at every decoding step. They debug against public tests under fixed budgets; their frozen designs are graded on held-out token sequences, resets, memory stalls, and synthesis, and a second track asks them to speed up a correct design at nearly fixed area.</p>
-<p>Across 9,136 attempts by four coding agents, the difficulty lies in stored state. Feedback that points to the first state mismatch raises acceptance over output-only feedback in all 12 agent&ndash;task cells of a matched study, by 25.0 to 46.9 percentage points, and halves the agent-hours per accepted design. Regraded on new sequences and conditions, 45 of 69 accepted designs fail within the 32 steps their tests required. More than a third of attempts to speed up a correct design end without one. An overall score ranks Sol 5.6 and Fable 5.1 above Astra 6 and Opus 5.5, and both halves of the instances give this order in all 200 random splits. Hardware agents therefore need debugging feedback that exposes stored state, and their benchmarks need final tests well beyond the development cases.</p>
+<section class="section" id="tracks"><div class="container split">
+  <div class="side"><span class="idx">02</span><h2>Two tracks,<br>one evaluator</h2></div>
+  <div class="body">
+    <p class="intro">An agent is a language model run in a tool-using harness: it inspects files, writes and revises hardware code, runs lint, simulation, and synthesis, reads test feedback, and submits a design within caps on wall time, tool calls, and output tokens.</p>
+    <div class="cols">
+      <div class="reveal"><span class="tag">Correctness</span><h3>Build a decoder.</h3><p>The agent starts from module interfaces or a working accelerator scaffold and implements a quantized decoder in RTL. Twelve tasks cover seven targets from the Qwen3.5, Gemma, and Llama 3.2 families.</p></div>
+      <div class="reveal"><span class="tag">PPA</span><h3>Speed up a correct design.</h3><p>The agent starts from a correct reference design and must raise throughput by at least 5% with at most 2% more LUTs while every check still passes. Four targets, on an AMD Alveo U250 FPGA at a 126 MHz target clock.</p></div>
+      <div class="reveal"><span class="tag">Evaluation</span><h3>Frozen, held-out grading.</h3><p>An integer oracle gives the exact outputs and stored state at every transaction. A submitted design is frozen and accepted only if it matches the oracle on held-out sequences, resets, and memory stalls, synthesizes, and leaves protected files intact.</p></div>
+    </div>
+    <figure><a class="frame" href="assets/overview.svg" aria-label="Open full-size image: one agent attempt in AIChipBench."><img src="assets/overview.svg" alt="One agent attempt: task inputs, the agent's edit-and-test loop against public tests, the frozen design passing an isolated evaluator, and the reported rates and cost." width="4278" height="1449" decoding="async"></a><figcaption>One agent attempt. The agent starts from interfaces or a scaffold (correctness track) or from a correct design (PPA track) and debugs against public tests whose feedback depends on the setting. Its final RTL is then frozen and must pass every gate of an isolated evaluator.</figcaption></figure>
+  </div>
 </div></section>
 
-<section class="block" id="tracks"><h2>Two tracks, one evaluator</h2>
-<p class="sub">An agent is a language model run in a tool-using harness: it inspects files, writes and revises hardware code, runs lint, simulation, and synthesis, reads test feedback, and submits a design within caps on wall time, tool calls, and output tokens.</p>
-<div class="trio">
-  <div class="card reveal"><span class="tag">01 / Correctness</span><h3>Build a decoder.</h3><p>The agent starts from module interfaces or a working accelerator scaffold and implements a quantized decoder in RTL. Twelve tasks cover seven targets from the Qwen3.5, Gemma, and Llama 3.2 families.</p></div>
-  <div class="card reveal"><span class="tag">02 / PPA</span><h3>Speed up a correct design.</h3><p>The agent starts from a correct reference design and must raise throughput by at least 5% with at most 2% more LUTs while every check still passes. Four targets, on an AMD Alveo U250 FPGA at a 126 MHz target clock.</p></div>
-  <div class="card reveal"><span class="tag">03 / Evaluation</span><h3>Frozen, held-out grading.</h3><p>An integer oracle gives the exact outputs and stored state at every transaction. A submitted design is frozen and accepted only if it matches the oracle on held-out sequences, resets, and memory stalls, synthesizes, and leaves protected files intact.</p></div>
-</div>
-<div class="card"><figure><a href="assets/overview.svg" aria-label="Open full-size image: one agent attempt in AIChipBench."><img src="assets/overview.svg" alt="One agent attempt: task inputs, the agent's edit-and-test loop against public tests, the frozen design passing an isolated evaluator, and the reported rates and cost." width="4278" height="1449" decoding="async"></a><figcaption>One agent attempt. The agent starts from interfaces or a scaffold (correctness track) or from a correct design (PPA track) and debugs against public tests whose feedback depends on the setting. Its final RTL is then frozen and must pass every gate of an isolated evaluator.</figcaption></figure></div>
-</section>
+<section class="section" id="leaderboard"><div class="container split">
+  <div class="side"><span class="idx">03</span><h2>Leaderboard</h2></div>
+  <div class="body">
+    <p class="intro">Each agent makes 472 attempts on the correctness track and 384 on the PPA track. The overall score multiplies the two track scores, so it is high only when both are.</p>
+    <div class="board"><div class="panel"><h3>Overall score</h3><p class="unit">100 &middot; <span class="ov">c</span> &middot; <span class="ov">q</span></p><ul class="rows" aria-label="Overall score by agent"><li title="Fable 5.1: 25.0 (95% interval 21.8 to 28.4)"><span class="who">Fable 5.1</span><span class="track"><span class="ci" style="left:72.67%;width:22.00%"></span><span class="bar" style="width:83.33%"></span></span><span class="val">25.0</span><span class="range">21.8&ndash;28.4</span></li><li title="Sol 5.6: 24.5 (95% interval 21.2 to 28.1)"><span class="who">Sol 5.6</span><span class="track"><span class="ci" style="left:70.67%;width:23.00%"></span><span class="bar" style="width:81.67%"></span></span><span class="val">24.5</span><span class="range">21.2&ndash;28.1</span></li><li title="Astra 6: 16.8 (95% interval 14.1 to 19.7)"><span class="who">Astra 6</span><span class="track"><span class="ci" style="left:47.00%;width:18.67%"></span><span class="bar" style="width:56.00%"></span></span><span class="val">16.8</span><span class="range">14.1&ndash;19.7</span></li><li title="Opus 5.5: 16.5 (95% interval 13.7 to 19.4)"><span class="who">Opus 5.5</span><span class="track"><span class="ci" style="left:45.67%;width:19.00%"></span><span class="bar" style="width:55.00%"></span></span><span class="val">16.5</span><span class="range">13.7&ndash;19.4</span></li></ul><p class="scale"><span>0</span><span>10</span><span>20</span><span>30</span></p></div><div class="panel"><h3>Correctness track</h3><p class="unit"><span class="ov">c</span> &middot; acceptance rate over twelve tasks, %</p><ul class="rows" aria-label="Correctness-track score by agent"><li title="Fable 5.1: 52.2"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:52.20%"></span></span><span class="val">52.2</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Sol 5.6: 62.4"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:62.40%"></span></span><span class="val">62.4</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Astra 6: 52.4"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:52.40%"></span></span><span class="val">52.4</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Opus 5.5: 57.1"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:57.10%"></span></span><span class="val">57.1</span><span class="range" aria-hidden="true">&nbsp;</span></li></ul><p class="scale"><span>0</span><span>50</span><span>100</span></p></div><div class="panel"><h3>PPA track</h3><p class="unit"><span class="ov">q</span> &middot; rate of improved designs over four targets, %</p><ul class="rows" aria-label="PPA-track score by agent"><li title="Fable 5.1: 47.9"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:47.90%"></span></span><span class="val">47.9</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Sol 5.6: 39.3"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:39.30%"></span></span><span class="val">39.3</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Astra 6: 32.0"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:32.00%"></span></span><span class="val">32.0</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Opus 5.5: 28.9"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:28.90%"></span></span><span class="val">28.9</span><span class="range" aria-hidden="true">&nbsp;</span></li></ul><p class="scale"><span>0</span><span>50</span><span>100</span></p></div></div><p class="key"><span><i class="k-bar"></i>value</span><span><i class="k-ci"></i>paired bootstrap 95% interval</span></p><details class="tv"><summary>Table view</summary><div class="scroll"><table><thead><tr><th scope="col">Agent</th><th scope="col">Overall score</th><th scope="col">95% interval</th><th scope="col">Correctness <span class="ov">c</span></th><th scope="col">PPA <span class="ov">q</span></th></tr></thead><tbody><tr><td>Fable 5.1</td><td>25.0</td><td>21.8&ndash;28.4</td><td>52.2</td><td>47.9</td></tr><tr><td>Sol 5.6</td><td>24.5</td><td>21.2&ndash;28.1</td><td>62.4</td><td>39.3</td></tr><tr><td>Astra 6</td><td>16.8</td><td>14.1&ndash;19.7</td><td>52.4</td><td>32.0</td></tr><tr><td>Opus 5.5</td><td>16.5</td><td>13.7&ndash;19.4</td><td>57.1</td><td>28.9</td></tr></tbody></table></div></details>
+  </div>
+</div></section>
 
-<section class="block" id="leaderboard"><h2>Leaderboard</h2>
-<p class="sub">Each agent makes 472 attempts on the correctness track and 384 on the PPA track. The overall score multiplies the two track scores, so it is high only when both are.</p>
-<div class="card"><div class="board"><div class="panel"><h3>Overall score</h3><p class="unit">Score = 100 &middot; c&#772; &middot; q&#772;, with a paired bootstrap 95% interval</p><ul class="rows" aria-label="Overall score by agent"><li title="Fable 5.1: 25.0 (95% interval 21.8 to 28.4)"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:83.33%"></span><span class="ci" style="left:72.67%;width:22.00%"></span></span><span class="val">25.0</span><span class="range">95% interval 21.8&ndash;28.4</span></li><li title="Sol 5.6: 24.5 (95% interval 21.2 to 28.1)"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:81.67%"></span><span class="ci" style="left:70.67%;width:23.00%"></span></span><span class="val">24.5</span><span class="range">95% interval 21.2&ndash;28.1</span></li><li title="Astra 6: 16.8 (95% interval 14.1 to 19.7)"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:56.00%"></span><span class="ci" style="left:47.00%;width:18.67%"></span></span><span class="val">16.8</span><span class="range">95% interval 14.1&ndash;19.7</span></li><li title="Opus 5.5: 16.5 (95% interval 13.7 to 19.4)"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:55.00%"></span><span class="ci" style="left:45.67%;width:19.00%"></span></span><span class="val">16.5</span><span class="range">95% interval 13.7&ndash;19.4</span></li></ul><p class="axisnote"><span>0</span><span>10</span><span>20</span><span>30</span></p></div><div class="panel"><h3>Correctness track</h3><p class="unit">c&#772;: acceptance rate averaged over the twelve tasks (%)</p><ul class="rows" aria-label="Correctness-track score by agent"><li title="Fable 5.1: 52.2"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:52.20%"></span></span><span class="val">52.2</span></li><li title="Sol 5.6: 62.4"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:62.40%"></span></span><span class="val">62.4</span></li><li title="Astra 6: 52.4"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:52.40%"></span></span><span class="val">52.4</span></li><li title="Opus 5.5: 57.1"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:57.10%"></span></span><span class="val">57.1</span></li></ul><p class="axisnote"><span>0</span><span>50</span><span>100</span></p></div><div class="panel"><h3>PPA track</h3><p class="unit">q&#772;: rate of improved designs averaged over the four targets (%)</p><ul class="rows" aria-label="PPA-track score by agent"><li title="Fable 5.1: 47.9"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:47.90%"></span></span><span class="val">47.9</span></li><li title="Sol 5.6: 39.3"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:39.30%"></span></span><span class="val">39.3</span></li><li title="Astra 6: 32.0"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:32.00%"></span></span><span class="val">32.0</span></li><li title="Opus 5.5: 28.9"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:28.90%"></span></span><span class="val">28.9</span></li></ul><p class="axisnote"><span>0</span><span>50</span><span>100</span></p></div></div><details class="table-view"><summary>Table view</summary><div class="tv"><table><thead><tr><th scope="col">Agent</th><th scope="col">Overall score</th><th scope="col">95% interval</th><th scope="col">Correctness track (c&#772;)</th><th scope="col">PPA track (q&#772;)</th></tr></thead><tbody><tr><td>Fable 5.1</td><td>25.0</td><td>21.8&ndash;28.4</td><td>52.2</td><td>47.9</td></tr><tr><td>Sol 5.6</td><td>24.5</td><td>21.2&ndash;28.1</td><td>62.4</td><td>39.3</td></tr><tr><td>Astra 6</td><td>16.8</td><td>14.1&ndash;19.7</td><td>52.4</td><td>32.0</td></tr><tr><td>Opus 5.5</td><td>16.5</td><td>13.7&ndash;19.4</td><td>57.1</td><td>28.9</td></tr></tbody></table></div></details></div>
-</section>
+<section class="section" id="findings"><div class="container split">
+  <div class="side"><span class="idx">04</span><h2>Findings</h2></div>
+  <div class="body"><ol class="findings"><li class="reveal"><span class="n">01</span><div><strong>Agents adapt a scaffold more reliably than they build a full-size decoder from interfaces.</strong><span class="d">On four full-size targets, 408 of 704 attempts from a scaffold are accepted, against 239 from interfaces.</span></div></li><li class="reveal"><span class="n">02</span><div><strong>Agents do much better when told where state diverges.</strong><span class="d">Feedback that locates the first state mismatch raises acceptance over output-only feedback in all 12 agent&ndash;task cells, by 25.0 to 46.9 points, and lowers the cost per accepted design from 13.4 to 6.5 agent-hours.</span></div></li><li class="reveal"><span class="n">03</span><div><strong>Passing a test suite does not establish exactness.</strong><span class="d">148 designs pass every public test and fail final acceptance. When frozen submissions are regraded, 45 of 69 accepted designs fail a new sequence or condition within the 32 steps their tests required.</span></div></li><li class="reveal"><span class="n">04</span><div><strong>Longer horizons lower acceptance, and the budget binds.</strong><span class="d">At the 1&times; budget, pooled acceptance falls from 252 to 115 of 288 attempts between one and 16 required decoding steps, and 489 of 1,888 correctness-track attempts end at a cap without submitting.</span></div></li><li class="reveal"><span class="n">05</span><div><strong>Optimization often ends without a correct design.</strong><span class="d">571 of 1,536 PPA attempts end without a correct design, although each started from one that passed every gate.</span></div></li></ol></div>
+</div></section>
 
-<section class="block" id="findings"><h2>Findings</h2>
-<p class="sub">Five results recur across the two tracks and the diagnostic studies.</p>
-<div class="card"><ol class="findings">
-<li><div><strong>Agents adapt a scaffold more reliably than they build a full-size decoder from interfaces.</strong><span>On four full-size targets, 408 of 704 attempts from a scaffold are accepted, against 239 from interfaces.</span></div></li>
-<li><div><strong>Agents do much better when told where state diverges.</strong><span>Feedback that locates the first state mismatch raises acceptance over output-only feedback in all 12 agent&ndash;task cells, by 25.0 to 46.9 points, and lowers the cost per accepted design from 13.4 to 6.5 agent-hours.</span></div></li>
-<li><div><strong>Passing a test suite does not establish exactness.</strong><span>148 designs pass every public test and fail final acceptance. When frozen submissions are regraded, 45 of 69 accepted designs fail a new sequence or condition within the 32 steps their tests required.</span></div></li>
-<li><div><strong>Longer horizons lower acceptance, and the budget binds.</strong><span>At the 1&times; budget, pooled acceptance falls from 252 to 115 of 288 attempts between one and 16 required decoding steps, and 489 of 1,888 correctness-track attempts end at a cap without submitting.</span></div></li>
-<li><div><strong>Optimization often ends without a correct design.</strong><span>571 of 1,536 PPA attempts end without a correct design, although each started from one that passed every gate.</span></div></li>
-</ol></div>
-</section>
-
-<section class="block" id="citation"><h2>Citation</h2>
-<p class="sub">If you find this work useful, please cite:</p>
-<div class="card"><pre class="bib" id="cite-bibtex"><code>@misc{wang2026aichipbench,
+<section class="section" id="citation"><div class="container split">
+  <div class="side"><span class="idx">05</span><h2>Citation</h2></div>
+  <div class="body">
+<pre class="bib" id="cite-bibtex"><code>@misc{wang2026aichipbench,
   title  = {AIChipBench: Benchmarking LLM Agents for Automated AI Accelerator Design},
   author = {Wang, Guangyuan and Li, Chengran and Luo, Minchen and Feng, Jichen and Wang, Mengdi and Zhang, Yifan},
   year   = {2026}
 }</code></pre>
-<button type="button" id="copy-cite" class="copy">Copy BibTeX</button><span id="copy-status" role="status" aria-live="polite"></span></div>
-</section>
+    <button type="button" id="copy-cite" class="btn">Copy BibTeX</button><span id="copy-status" role="status" aria-live="polite"></span>
+  </div>
+</div></section>
 </main>
 
-<section class="finale"><div class="wrap">
-  <p class="eyebrow">What the results ask for</p>
-  <h2>Expose stored state. Test beyond the development cases.</h2>
-  <p>Hardware agents need debugging feedback that exposes stored state, and their benchmarks need final tests well beyond the development cases.</p>
-  <div class="links"><a class="btn primary" href="https://github.com/frontiereval/AIChipBench">GitHub &nearr;</a><a class="btn" href="https://frontiereval.github.io/">FrontierEval &nearr;</a></div>
-</div></section>
-
-<footer><div class="wrap">
-  <p>AIChipBench is a <a href="https://frontiereval.github.io/">FrontierEval</a> benchmark. Source of this page: <a href="https://github.com/frontiereval/AIChipBench">frontiereval/AIChipBench</a>.</p>
-  <p>&copy; 2026 The AIChipBench authors.</p>
+<footer><div class="container">
+  <div class="l"><a href="https://frontiereval.github.io/">FrontierEval</a><a href="https://github.com/frontiereval/AIChipBench">GitHub</a><a href="#top">Top &uarr;</a></div>
+  <div class="c">&copy; 2026 The AIChipBench authors</div>
 </div></footer>
 <script>
 (function () {
-  var root = document.documentElement, btn = document.getElementById('theme');
-  var order = ['auto', 'light', 'dark'], saved = null;
-  try { saved = localStorage.getItem('theme'); } catch (e) {}
-  function apply(mode) {
-    if (mode === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', mode);
-    btn.textContent = 'Theme: ' + mode;
-  }
-  var mode = order.indexOf(saved) >= 0 ? saved : 'auto';
-  apply(mode);
-  btn.addEventListener('click', function () {
-    mode = order[(order.indexOf(mode) + 1) % order.length];
-    apply(mode);
-    try { localStorage.setItem('theme', mode); } catch (e) {}
-  });
+  var nav = document.querySelector('.nav'), hero = document.querySelector('.hero');
+  if ('IntersectionObserver' in window && hero) {
+    new IntersectionObserver(function (e) { nav.classList.toggle('solid', !e[0].isIntersecting); }, { rootMargin: '-65px 0px 0px 0px' }).observe(hero);
+  } else { nav.classList.add('solid'); }
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   var items = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -8% 0px' });
+      entries.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } });
+    }, { rootMargin: '0px 0px -6% 0px' });
     items.forEach(function (el) { io.observe(el); });
   } else { items.forEach(function (el) { el.classList.add('in'); }); }
   var copy = document.getElementById('copy-cite');
@@ -299,10 +269,10 @@ footer p { margin: 0 0 8px; }
     var pre = document.getElementById('cite-bibtex'), status = document.getElementById('copy-status');
     function selectAll() {
       var s = window.getSelection(), r = document.createRange(); r.selectNodeContents(pre); s.removeAllRanges(); s.addRange(r);
-      status.textContent = 'Citation selected. Press Ctrl+C or Command+C to copy.';
+      status.textContent = 'Selected. Press Ctrl+C or Command+C to copy.';
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(pre.textContent).then(function () { status.textContent = 'BibTeX copied.'; }, selectAll);
+      navigator.clipboard.writeText(pre.textContent).then(function () { status.textContent = 'Copied.'; }, selectAll);
     } else { selectAll(); }
   });
 })();
