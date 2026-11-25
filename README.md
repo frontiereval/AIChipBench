@@ -1,6 +1,6 @@
 # AIChipBench: Benchmarking LLM Agents for Automated AI Accelerator Design
 
-[![Paper](https://img.shields.io/badge/Paper-coming_soon-lightgrey)](#resources)
+[![arXiv](https://img.shields.io/badge/arXiv-2611.33093-b31b1b)](https://arxiv.org/abs/2611.33093)
 [![Website](https://img.shields.io/badge/Project-Website-blue)](https://frontiereval.github.io/AIChipBench/)
 
 ### Decoder hardware that must stay exact, in outputs and stored state, at every decoding step
@@ -47,7 +47,7 @@ Score = 100 · c̄ · q̄, with a paired bootstrap 95% interval. c̄ is the acce
 ## Resources
 
 - [Project website](https://frontiereval.github.io/AIChipBench/)
-- Paper: coming soon
+- [Paper (arXiv:2611.33093)](https://arxiv.org/abs/2611.33093)
 
 ## Citation
 
@@ -55,6 +55,9 @@ Score = 100 · c̄ · q̄, with a paired bootstrap 95% interval. c̄ is the acce
 @misc{wang2026aichipbench,
   title  = {AIChipBench: Benchmarking LLM Agents for Automated AI Accelerator Design},
   author = {Wang, Guangyuan and Li, Chengran and Luo, Minchen and Feng, Jichen and Wang, Mengdi and Zhang, Yifan},
-  year   = {2026}
+  year   = {2026},
+  eprint = {2611.33093},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL}
 }
 ```
