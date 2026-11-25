@@ -22,6 +22,23 @@ An agent is a language model run in a tool-using harness: it inspects files, wri
 - **PPA track.** The agent starts from a correct reference design and must raise throughput by at least 5% with at most 2% more LUTs while every check still passes. Four targets, on an AMD Alveo U250 FPGA at a 126 MHz target clock.
 - **Frozen, held-out grading.** An integer oracle gives the exact outputs and stored state at every transaction. A submitted design is frozen and accepted only if it matches the oracle on held-out sequences, resets, and memory stalls, synthesizes, and leaves protected files intact.
 
+## Decoder targets
+
+The correctness track has twelve tasks on seven decoder targets from three model families. Qwen3.5-nano is our name for a compact Qwen-derived configuration with four layers, width 256, and a 4,096-token vocabulary. Four of the targets are also the PPA targets.
+
+| Target | Steps | From interfaces | From a scaffold | PPA track |
+|---|---:|---:|---:|:---:|
+| Qwen3.5-nano T2 (4 layers) | 1 | 80.5% | – | – |
+| Qwen3.5-nano T3 (4 layers) | 8 | 71.1% | – | – |
+| Qwen3.5-0.8B (24 layers) | 32 | – | 78.9% | Yes |
+| Qwen3.5-4B (32 layers) | 32 | – | 77.1% | Yes |
+| Gemma 4 E4B | 32 | 26.0% | 56.3% | Yes |
+| Llama 3.2 3B | 32 | 32.3% | 64.6% | Yes |
+| Gemma 3 4B (text decoder) | 32 | 32.0% | 47.7% | – |
+| Llama 3.2-1B | 32 | 39.5% | 66.4% | – |
+
+From interfaces and From a scaffold give the share of attempts accepted on that correctness-track task, pooled over the four agents. A dash means the benchmark has no such task.
+
 ## Leaderboard
 
 Four coding agents make 9,136 attempts: 472 each on the correctness track and 384 each on the PPA track, and the rest in diagnostic studies. The overall score multiplies the two track scores.

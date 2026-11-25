@@ -106,6 +106,20 @@ figure{margin:2.6rem 0 0}
 figure .frame{display:block;border:1px solid var(--line);border-radius:14px;padding:clamp(.75rem,2vw,1.5rem);background:#fff}
 figcaption{font-size:.88rem;color:var(--ink-3);margin-top:.9rem;max-width:46em;line-height:1.55}
 
+/* decoder targets */
+.tgt{border-top:1px solid var(--ink)} .tgt .scroll{overflow-x:auto}
+.tgt table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.tgt th,.tgt td{padding:.9rem 1.2rem .9rem 0;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.tgt th:last-child,.tgt td:last-child{padding-right:0}
+.tgt thead th{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:400}
+.tgt th:first-child{text-align:left}
+.tgt tbody th{font-size:1.02rem;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+.tgt tbody th span{font-family:var(--mono);font-size:.7rem;font-weight:400;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);margin-left:.6rem}
+.tgt td{font-family:var(--mono);font-size:.88rem;color:var(--ink)} .tgt td.none{color:var(--ink-3)}
+.tgt tbody tr:last-child>*{border-bottom:0}
+@media(max-width:820px){.tgt th,.tgt td{padding-right:.8rem} .tgt thead th{white-space:normal;vertical-align:bottom} .tgt tbody th span{display:block;margin:.25rem 0 0}}
+.body .tnote{font-size:.88rem;color:var(--ink-3);margin:1.1rem 0 0;max-width:46em;line-height:1.55}
+
 /* leaderboard: black bars, values on every bar, the 95% interval as a grey band */
 .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.5rem,3vw,3rem);border-top:1px solid var(--ink);padding-top:1.4rem}
 .panel h3{font-weight:500;font-size:1.05rem;letter-spacing:-.015em;margin:0 0 .3rem}
@@ -181,7 +195,7 @@ footer .c{color:var(--d-ink-3)}
 <a class="skip" href="#main">Skip to content</a>
 <nav class="nav" aria-label="Main"><div class="container">
   <a class="brand" href="#top">AIChipBench</a>
-  <div class="links"><a class="opt" href="#abstract">Abstract</a><a class="opt" href="#tracks">Tracks</a><a href="#leaderboard">Leaderboard</a><a class="opt" href="#findings">Findings</a><a class="opt" href="#citation">Cite</a><a href="https://frontiereval.github.io/">FrontierEval</a></div>
+  <div class="links"><a class="opt" href="#abstract">Abstract</a><a class="opt" href="#tracks">Tracks</a><a class="opt" href="#targets">Targets</a><a href="#leaderboard">Leaderboard</a><a class="opt" href="#findings">Findings</a><a class="opt" href="#citation">Cite</a><a href="https://frontiereval.github.io/">FrontierEval</a></div>
 </div></nav>
 
 <header class="hero" id="top"><div class="container">
@@ -222,8 +236,20 @@ footer .c{color:var(--d-ink-3)}
   </div>
 </div></section>
 
+<section class="section" id="targets"><div class="container split">
+  <div class="side"><span class="idx">03</span><h2>Decoder targets</h2></div>
+  <div class="body">
+    <p class="intro">The correctness track has twelve tasks on seven decoder targets from three model families. Qwen3.5-nano is our name for a compact Qwen-derived configuration with four layers, width 256, and a 4,096-token vocabulary. Four of the targets are also the PPA targets.</p>
+    <div class="tgt reveal"><div class="scroll"><table>
+      <thead><tr><th scope="col">Target</th><th scope="col">Steps</th><th scope="col">From interfaces</th><th scope="col">From a scaffold</th><th scope="col">PPA track</th></tr></thead>
+      <tbody><tr><th scope="row">Qwen3.5-nano T2 <span>4 layers</span></th><td>1</td><td>80.5%</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr><tr><th scope="row">Qwen3.5-nano T3 <span>4 layers</span></th><td>8</td><td>71.1%</td><td class="none">&ndash;</td><td class="none">&ndash;</td></tr><tr><th scope="row">Qwen3.5-0.8B <span>24 layers</span></th><td>32</td><td class="none">&ndash;</td><td>78.9%</td><td>Yes</td></tr><tr><th scope="row">Qwen3.5-4B <span>32 layers</span></th><td>32</td><td class="none">&ndash;</td><td>77.1%</td><td>Yes</td></tr><tr><th scope="row">Gemma 4 E4B</th><td>32</td><td>26.0%</td><td>56.3%</td><td>Yes</td></tr><tr><th scope="row">Llama 3.2 3B</th><td>32</td><td>32.3%</td><td>64.6%</td><td>Yes</td></tr><tr><th scope="row">Gemma 3 4B <span>text decoder</span></th><td>32</td><td>32.0%</td><td>47.7%</td><td class="none">&ndash;</td></tr><tr><th scope="row">Llama 3.2-1B</th><td>32</td><td>39.5%</td><td>66.4%</td><td class="none">&ndash;</td></tr></tbody>
+    </table></div></div>
+    <p class="tnote">From interfaces and From a scaffold give the share of attempts accepted on that correctness-track task, pooled over the four agents. A dash means the benchmark has no such task.</p>
+  </div>
+</div></section>
+
 <section class="section" id="leaderboard"><div class="container split">
-  <div class="side"><span class="idx">03</span><h2>Leaderboard</h2></div>
+  <div class="side"><span class="idx">04</span><h2>Leaderboard</h2></div>
   <div class="body">
     <p class="intro">Each agent makes 472 attempts on the correctness track and 384 on the PPA track. The overall score multiplies the two track scores, so it is high only when both are.</p>
     <div class="board"><div class="panel"><h3>Overall score</h3><p class="unit">100 &middot; <span class="ov">c</span> &middot; <span class="ov">q</span></p><ul class="rows" aria-label="Overall score by agent"><li title="Fable 5.1: 25.0 (95% interval 21.8 to 28.4)"><span class="who">Fable 5.1</span><span class="track"><span class="ci" style="left:72.67%;width:22.00%"></span><span class="bar" style="width:83.33%"></span></span><span class="val">25.0</span><span class="range">21.8&ndash;28.4</span></li><li title="Sol 5.6: 24.5 (95% interval 21.2 to 28.1)"><span class="who">Sol 5.6</span><span class="track"><span class="ci" style="left:70.67%;width:23.00%"></span><span class="bar" style="width:81.67%"></span></span><span class="val">24.5</span><span class="range">21.2&ndash;28.1</span></li><li title="Astra 6: 16.8 (95% interval 14.1 to 19.7)"><span class="who">Astra 6</span><span class="track"><span class="ci" style="left:47.00%;width:18.67%"></span><span class="bar" style="width:56.00%"></span></span><span class="val">16.8</span><span class="range">14.1&ndash;19.7</span></li><li title="Opus 5.5: 16.5 (95% interval 13.7 to 19.4)"><span class="who">Opus 5.5</span><span class="track"><span class="ci" style="left:45.67%;width:19.00%"></span><span class="bar" style="width:55.00%"></span></span><span class="val">16.5</span><span class="range">13.7&ndash;19.4</span></li></ul><p class="scale"><span>0</span><span>10</span><span>20</span><span>30</span></p></div><div class="panel"><h3>Correctness track</h3><p class="unit"><span class="ov">c</span> &middot; acceptance rate over twelve tasks, %</p><ul class="rows" aria-label="Correctness-track score by agent"><li title="Fable 5.1: 52.2"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:52.20%"></span></span><span class="val">52.2</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Sol 5.6: 62.4"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:62.40%"></span></span><span class="val">62.4</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Astra 6: 52.4"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:52.40%"></span></span><span class="val">52.4</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Opus 5.5: 57.1"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:57.10%"></span></span><span class="val">57.1</span><span class="range" aria-hidden="true">&nbsp;</span></li></ul><p class="scale"><span>0</span><span>50</span><span>100</span></p></div><div class="panel"><h3>PPA track</h3><p class="unit"><span class="ov">q</span> &middot; rate of improved designs over four targets, %</p><ul class="rows" aria-label="PPA-track score by agent"><li title="Fable 5.1: 47.9"><span class="who">Fable 5.1</span><span class="track"><span class="bar" style="width:47.90%"></span></span><span class="val">47.9</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Sol 5.6: 39.3"><span class="who">Sol 5.6</span><span class="track"><span class="bar" style="width:39.30%"></span></span><span class="val">39.3</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Astra 6: 32.0"><span class="who">Astra 6</span><span class="track"><span class="bar" style="width:32.00%"></span></span><span class="val">32.0</span><span class="range" aria-hidden="true">&nbsp;</span></li><li title="Opus 5.5: 28.9"><span class="who">Opus 5.5</span><span class="track"><span class="bar" style="width:28.90%"></span></span><span class="val">28.9</span><span class="range" aria-hidden="true">&nbsp;</span></li></ul><p class="scale"><span>0</span><span>50</span><span>100</span></p></div></div><p class="key"><span><i class="k-bar"></i>value</span><span><i class="k-ci"></i>paired bootstrap 95% interval</span></p><details class="tv"><summary>Table view</summary><div class="scroll"><table><thead><tr><th scope="col">Agent</th><th scope="col">Overall score</th><th scope="col">95% interval</th><th scope="col">Correctness <span class="ov">c</span></th><th scope="col">PPA <span class="ov">q</span></th></tr></thead><tbody><tr><td>Fable 5.1</td><td>25.0</td><td>21.8&ndash;28.4</td><td>52.2</td><td>47.9</td></tr><tr><td>Sol 5.6</td><td>24.5</td><td>21.2&ndash;28.1</td><td>62.4</td><td>39.3</td></tr><tr><td>Astra 6</td><td>16.8</td><td>14.1&ndash;19.7</td><td>52.4</td><td>32.0</td></tr><tr><td>Opus 5.5</td><td>16.5</td><td>13.7&ndash;19.4</td><td>57.1</td><td>28.9</td></tr></tbody></table></div></details>
@@ -231,12 +257,12 @@ footer .c{color:var(--d-ink-3)}
 </div></section>
 
 <section class="section" id="findings"><div class="container split">
-  <div class="side"><span class="idx">04</span><h2>Findings</h2></div>
+  <div class="side"><span class="idx">05</span><h2>Findings</h2></div>
   <div class="body"><ol class="findings"><li class="reveal"><span class="n">01</span><div><strong>Agents adapt a scaffold more reliably than they build a full-size decoder from interfaces.</strong><span class="d">On four full-size targets, 408 of 704 attempts from a scaffold are accepted, against 239 from interfaces.</span></div></li><li class="reveal"><span class="n">02</span><div><strong>Agents do much better when told where state diverges.</strong><span class="d">Feedback that locates the first state mismatch raises acceptance over output-only feedback in all 12 agent&ndash;task cells, by 25.0 to 46.9 points, and lowers the cost per accepted design from 13.4 to 6.5 agent-hours.</span></div></li><li class="reveal"><span class="n">03</span><div><strong>Passing a test suite does not establish exactness.</strong><span class="d">148 designs pass every public test and fail final acceptance. When frozen submissions are regraded, 45 of 69 accepted designs fail a new sequence or condition within the 32 steps their tests required.</span></div></li><li class="reveal"><span class="n">04</span><div><strong>Longer horizons lower acceptance, and the budget binds.</strong><span class="d">At the 1&times; budget, pooled acceptance falls from 252 to 115 of 288 attempts between one and 16 required decoding steps, and 489 of 1,888 correctness-track attempts end at a cap without submitting.</span></div></li><li class="reveal"><span class="n">05</span><div><strong>Optimization often ends without a correct design.</strong><span class="d">571 of 1,536 PPA attempts end without a correct design, although each started from one that passed every gate.</span></div></li></ol></div>
 </div></section>
 
 <section class="section" id="citation"><div class="container split">
-  <div class="side"><span class="idx">05</span><h2>Citation</h2></div>
+  <div class="side"><span class="idx">06</span><h2>Citation</h2></div>
   <div class="body">
 <pre class="bib" id="cite-bibtex"><code>@misc{wang2026aichipbench,
   title  = {AIChipBench: Benchmarking LLM Agents for Automated AI Accelerator Design},
