@@ -32,10 +32,10 @@ The correctness track has twelve tasks on seven decoder targets from three model
 | Qwen3.5-nano T3 (4 layers) | 8 | 71.1% | – | – |
 | Qwen3.5-0.8B (24 layers) | 32 | – | 78.9% | Yes |
 | Qwen3.5-4B (32 layers) | 32 | – | 77.1% | Yes |
-| Gemma 4 E4B | 32 | 26.0% | 56.3% | Yes |
-| Llama 3.2 3B | 32 | 32.3% | 64.6% | Yes |
-| Gemma 3 4B (text decoder) | 32 | 32.0% | 47.7% | – |
-| Llama 3.2-1B | 32 | 39.5% | 66.4% | – |
+| Gemma 4 E4B (42 layers) | 32 | 26.0% | 56.3% | Yes |
+| Llama 3.2 3B (28 layers) | 32 | 32.3% | 64.6% | Yes |
+| Gemma 3 4B (text, 34 layers) | 32 | 32.0% | 47.7% | – |
+| Llama 3.2-1B (16 layers) | 32 | 39.5% | 66.4% | – |
 
 From interfaces and From a scaffold give the share of attempts accepted on that correctness-track task, pooled over the four agents. A dash means the benchmark has no such task.
 
