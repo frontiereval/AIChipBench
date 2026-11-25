@@ -2,6 +2,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2611.33093-b31b1b)](https://arxiv.org/abs/2611.33093)
 [![Website](https://img.shields.io/badge/Project-Website-blue)](https://frontiereval.github.io/AIChipBench/)
+[![License](https://img.shields.io/badge/License-Apache_2.0-green)](LICENSE)
 
 ### Decoder hardware that must stay exact, in outputs and stored state, at every decoding step
 
@@ -61,3 +62,7 @@ Score = 100 · c̄ · q̄, with a paired bootstrap 95% interval. c̄ is the acce
   primaryClass  = {cs.CL}
 }
 ```
+
+## License
+
+Released under the [Apache License 2.0](LICENSE).
